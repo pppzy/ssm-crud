@@ -1,0 +1,63 @@
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+          http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+         version="3.0">
+
+
+  <!--配置监听器，加载时引入ApplicationContext.xml -->
+  <listener>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+  <!--web项目启动时，加载该配置文件 -->
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>classpath:ApplicationContext.xml</param-value>
+  </context-param>
+
+  <!--配置前端控制器 -->
+   <servlet>
+     <servlet-name>dispatcherServlet</servlet-name>
+     <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+     <!--在启动控制器，也会加载springmvc的主配置文件 -->
+     <init-param>
+       <param-name>contextConfigLocation</param-name>
+       <param-value>classpath:springmvc.xml</param-value>
+     </init-param>
+     <!--启动优先级第一 -->
+     <load-on-startup>1</load-on-startup>
+   </servlet>
+   <servlet-mapping>
+     <servlet-name>dispatcherServlet</servlet-name>
+     <url-pattern>/</url-pattern>
+   </servlet-mapping>
+
+  <!--配置过滤器解决中文乱码 -->
+  <filter>
+    <filter-name>encodingFilter</filter-name>
+    <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+    <init-param>
+      <param-name>encoding</param-name>
+      <param-value>utf-8</param-value>
+    </init-param>
+    <init-param>
+      <param-name>forceEncoding</param-name>
+      <param-value>true</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>encodingFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  <!--配置处理请求方式的过滤器 方便REST url风格 -->
+  <filter>
+    <filter-name>methodFilter</filter-name>
+    <filter-class>org.springframework.web.filter.HiddenHttpMethodFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>methodFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
+
+</web-app>
